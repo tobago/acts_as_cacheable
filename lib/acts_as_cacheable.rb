@@ -79,7 +79,7 @@ module Acts
       # Returns a collection of all cached objects.
       # E.g.: Department.all --> departments
       def all
-        @c_reload_after && ( (@c_cached_at + @c_reload_after) < Time.now ) ? flush : @c_all_cached_objects
+        @c_reload_after && ( (@c_cached_at + @c_reload_after) < Time.now ) ? flush : @c_all_cached_objects.compact
       end
   
       # Overwritten method, which returns the first object of the cached collection
