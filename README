@@ -1,7 +1,8 @@
 ActsAsCacheable
 ===============
 
-Introduction goes here.
+Caches a collection of ActiveRecord objects and ActiveResource objects as well for performance reasons (means not to hurt the database in these cases).
+This caching mechanism is intended for caching lookup objects, which won't be changed for longer periods of time, e.g. departments of a comapany.
 
 
 Example
