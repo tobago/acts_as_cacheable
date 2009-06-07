@@ -73,23 +73,23 @@ module Acts
       # E.g. Department === 'Design Engineering' --> department
       # Department === 1 --> department (if no key was assigned)
       def ===(key)
-        all.detect{|x| x.send(@c_key) == key if x}
+        all_compacted.detect{|x| x.send(@c_key) == key}
       end
     
       # Returns a collection of all cached objects.
       # E.g.: Department.all --> departments
       def all
-        @c_reload_after && ( (@c_cached_at + @c_reload_after) < Time.now ) ? flush : @c_all_cached_objects.compact
+        @c_reload_after && ( (@c_cached_at + @c_reload_after) < Time.now ) ? flush : @c_all_cached_objects
       end
   
       # Overwritten method, which returns the first object of the cached collection
       def first
-        all.first
+        all_compacted.first
       end
 
       # Overwritten method, which returns the last object of the cached collection
       def last
-        all.last
+        all_compacted.last
       end
 
       # Overwritten method, which returns a cached object or nil, defined by its ID.
@@ -105,6 +105,10 @@ module Acts
       end
 
    private
+      def all_compacted
+        all.compact
+      end
+
       # Caches a collection of objects depending on the assigned finder options (see acts_as_cacheable).
       def cache_finder
         @c_all_cached_objects = Array.new
