@@ -66,35 +66,35 @@ module Acts
       # Returns a cached object or nil, defined by its ID.
       # E.g. Department[1] --> department
       def [] (id)
-        all[id]
+        all_uncompacted[id]
       end
  
       # Returns a cached object or nil, defined by its accessor method.
       # E.g. Department === 'Design Engineering' --> department
       # Department === 1 --> department (if no key was assigned)
       def ===(key)
-        all_compacted.detect{|x| x.send(@c_key) == key}
+        all.detect{|x| x.send(@c_key) == key}
       end
     
       # Returns a collection of all cached objects.
       # E.g.: Department.all --> departments
       def all
-        @c_reload_after && ( (@c_cached_at + @c_reload_after) < Time.now ) ? flush : @c_all_cached_objects
+        all_uncompacted.compact
       end
   
       # Overwritten method, which returns the first object of the cached collection
       def first
-        all_compacted.first
+        all.first
       end
 
       # Overwritten method, which returns the last object of the cached collection
       def last
-        all_compacted.last
+        all.last
       end
 
       # Overwritten method, which returns a cached object or nil, defined by its ID.
       def find_by_id id
-        all[id]
+        self[id]
       end
 
       # Flushes the cached objects.
@@ -105,8 +105,8 @@ module Acts
       end
 
    private
-      def all_compacted
-        all.compact
+      def all_uncompacted
+        @c_reload_after && ( (@c_cached_at + @c_reload_after) < Time.now ) ? flush : @c_all_cached_objects
       end
 
       # Caches a collection of objects depending on the assigned finder options (see acts_as_cacheable).
