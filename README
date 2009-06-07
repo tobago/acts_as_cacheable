@@ -8,7 +8,27 @@ This caching mechanism is intended for caching lookup objects, which won't be ch
 Example
 =======
 
-Example goes here.
+class Department < ActiveRecord::Base
+  acts_as_cacheable :order => 'name', :reload => 10.minutes, :key => :name
+end
 
+class Person < ActiveRecord::Base
+  belongs_to_cached :department
+end
+
+departments = Departments.all
+departments = Departments[2..4]
+department = Department.first
+department = Department.last
+department = Department.find_by_id 2
+department = Department[2]
+department = Department === 'Design Engineering'
+
+person = Person.first
+dep = person.department # doing one database query --> department
+dep.id # --> 3
+dep.name # --> 'Marketing'
+person.department = Department[2] # not hurting the database once again, due to caching --> departament
+person.save # --> true
 
 Copyright (c) 2009 [name of plugin creator], released under the MIT license
