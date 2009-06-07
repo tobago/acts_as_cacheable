@@ -23,8 +23,8 @@ module Acts
       def acts_as_cacheable(options = {})
         extend Acts::Cacheable::ClassMethods
         include Acts::Cacheable::InstanceMethods
-        after_save :flush
-        after_destroy :flush
+        after_save {self.flush}
+        after_destroy {self.flush}
         @c_cached_at = Time.now
         @c_reload_after = options.delete :reload
         @c_key = (options.delete :key) || :id
@@ -53,10 +53,6 @@ module Acts
     end
 
     module InstanceMethods
-      def flush
-        self.class.flush
-      end
-
       def updated?
         false
       end
