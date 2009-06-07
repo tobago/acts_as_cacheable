@@ -84,7 +84,7 @@ module Acts
   
       # Overwritten method, which returns the first object of the cached collection
       def first
-        all.first
+        all.detect{|x| !x.nil?}
       end
 
       # Overwritten method, which returns the last object of the cached collection
